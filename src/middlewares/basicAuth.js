@@ -7,10 +7,12 @@ function basicAuth(req, res, next) {
     return res.status(401).end("Authentification headers are missing")
   }
 
+  const reqId = req.path.split("/")[2]
+
   const key = req.headers.authorization.split(" ")[1]
   const decode = atob(key)
   const [user, password] = decode.split(":")
-  const validation = auth({user, password})
+  const validation = auth({user, password, reqId})
   if(!validation){
     return res.status(401).end("User or password incorrect")
   }
