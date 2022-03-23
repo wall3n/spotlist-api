@@ -55,6 +55,17 @@ app.get('/users/:userId/lists', (req, res) => {
   res.json(data[searchId].playlists)
 })
 
+app.get('/users/:userId/lists/:listId', (req, res) => {
+  const searchId = req.params.userId[5]
+  const arrayId = req.params.listId - 1
+  const search = data[searchId].playlists[arrayId]
+  if(typeof search !== "object"){
+    res.status(400).end("Invalid params")
+  }
+  res.json(search)
+
+})
+
 app.listen(4000, () => {
   console.log("App online")
 })
