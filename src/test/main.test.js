@@ -31,9 +31,12 @@ describe('Post a list and load it', () => {
             .post("/users/aaaa01/lists/")
             .auth('Laurel Fitz', 'abcdef1234')
             .send({
-                name: "My list",
-                description: "Nice description",
-                songs: ["Malamente", "Saoko"]
+                songs: [
+                    {
+                        title: "aloja",
+                        artist: "bele"
+                    }
+                ]
             })
             .end((err, res) => {
                 if(err) throw err
@@ -43,7 +46,7 @@ describe('Post a list and load it', () => {
                     .auth("Laurel Fitz", "abcdef1234")
                     .end((err, res) => {
                         if(err) throw err
-                        chai.expect(res.body[0]).to.have.property("name").to.be.equal("My list")
+                        chai.expect(res.body[0]).to.have.property("id").to.be.equal(1)
                         done()
                     })
             })
@@ -54,7 +57,7 @@ describe('Post a list and load it', () => {
             .auth('Jhon Smith', "unsecuredpassword1234")
             .end((err, res) => {
                 if(err) throw err
-                chai.expect(res.body).to.have.property("name").to.be.equal("Example")
+                chai.expect(res.body).to.have.property("id").to.be.equal(1)
                 done()
             })
     })
@@ -65,7 +68,10 @@ describe('post a song', () => {
         chai.request(api)
             .post('/users/aaaa00/lists/1/songs')
             .auth('Jhon Smith', 'unsecuredpassword1234')
-            .send({ song: "Cayo la noche remix" })
+            .send({ song: {
+                title: "Cayo la noche - Remix",
+                artist: "Quevedo"
+            } })
             .end((err, res) => {
                 if(err) throw err
                 chai.expect(res).to.have.status(200)
@@ -74,7 +80,7 @@ describe('post a song', () => {
                     .auth('Jhon Smith', 'unsecuredpassword1234')
                     .end((err, res) => {
                         if(err) throw err
-                        chai.expect(res.body.songs[-1]).to.be.equal("Cayo la noche remix")
+                        chai.expect(res.body.songs[1].title).to.be.equal("Cayo la noche - Remix")
                         done()
                     })
             })
