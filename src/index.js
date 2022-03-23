@@ -2,6 +2,7 @@ const express = require("express")
 const app = express()
 const basicAuth = require("./middlewares/basicAuth")
 const bodyParser = require("body-parser")
+const errorHandler = require("./middlewares/error")
 
 const data = [
   {
@@ -9,9 +10,12 @@ const data = [
     playlists: [
    {
         id: 1,
-        name: "Example",
-        description: "Description example",
-        songs: ["Examplesong"]
+        songs: [
+          {
+            artist: "Bad Bunny",
+            title: "Dakiti"
+          }
+        ]
       }
     ],
     idCounter: 1
@@ -28,26 +32,27 @@ const data = [
   }
 ]
 
+app.use(errorHandler)
 app.use(basicAuth)
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))
 
 app.post('/users/:userId/lists', (req, res) => {
-  const { name, description, songs } = req.body
+  const { songs } = req.body
   const searchId = req.params.userId[5]
 
-  if(!name || !description || !songs || typeof name !== "string" || typeof description !== "string" || typeof songs !== "object"){
+  if(!songs || typeof songs !== "object"){
     res.status(400).end("Invalid params")
   }
   data[searchId].playlists.push({
     id: data[searchId].idCounter + 1,
-    name: name,
-    description: description,
     songs: songs
   })
   data[searchId].idCounter++
-  console.log(data[searchId].playlists)
-  res.status(200).end(`Your id is ${data[searchId].idCounter}`)
+  res.json({
+    id: data[searchId].idCounter,
+    songs: songs
+  })
 })
 
 app.get('/users/:userId/lists', (req, res) => {
