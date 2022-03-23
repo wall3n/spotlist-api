@@ -60,10 +60,27 @@ app.get('/users/:userId/lists/:listId', (req, res) => {
   const arrayId = req.params.listId - 1
   const search = data[searchId].playlists[arrayId]
   if(typeof search !== "object"){
-    res.status(400).end("Invalid params")
+    return res.status(400).end("Invalid params")
   }
   res.json(search)
+})
 
+app.post('/users/:userId/lists/:listid/songs', (req, res) => {
+  const { song } = req.body
+  const { artist, title } = song
+  if(!song || !artist || !title || typeof song !== "object" || typeof artist !== "string" || typeof title !== "string" ){
+    return res.status(400).end("Invalid params")
+  }
+
+  const searchId = req.params.userId[5]
+  const arrayId = req.params.listid - 1
+  const search = data[searchId].playlists[arrayId].songs
+  if(typeof search !== "object"){
+    return res.status(400).end("Invalid params")
+  }
+
+  search.push(song)
+  res.json(song)
 })
 
 app.listen(4000, () => {
