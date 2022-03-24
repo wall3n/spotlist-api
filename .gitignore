@@ -8,3 +8,4 @@ dist
 node_modules
 commitlint.config.js
 .husky/
+package-lock.json
