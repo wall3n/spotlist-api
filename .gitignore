@@ -5,3 +5,7 @@ dist
 !/ts-express-mocha/cypress/integration
 !/ts-express-mocha/cypress/tsconfig.json
 /**/cypress.xml
+node_modules
+commitlint.config.js
+.husky/
+package-lock.json
